@@ -5,7 +5,6 @@ import { libraryPoolAddress, libraryPoolABI } from "../../library-pool.abi";
 import CivilibAccessButton from "./CivilibAccessButton";
 import CategoryBadge from "../CategoryBadge";
 import type { Book } from "../../core/interfaces/book.interface";
-import { supabase } from "../../libs/supabase";
 
 interface Props {
   book: Book;
