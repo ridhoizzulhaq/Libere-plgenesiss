@@ -98,7 +98,7 @@ One of the persistent problems in charitable giving and corporate social respons
 
 ## Changelog (Hackathon Period)
 
-Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
+Features built during PL Genesis: Frontiers of Collaboration :
 
 - **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
 - **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles, surfacing verifiable usage data per donation
