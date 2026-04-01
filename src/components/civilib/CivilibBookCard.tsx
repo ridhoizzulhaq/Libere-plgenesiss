@@ -21,7 +21,6 @@ const CivilibBookCard = ({ book, client, clientPublic, libraryAddress, useMonoch
   const [loading, setLoading] = useState(true);
   const [userBorrowExpiry, setUserBorrowExpiry] = useState<number | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [borrowCount, setBorrowCount] = useState<number>(0);
 
   const availableBooks = totalStock - frozenNow;
   const isBookAvailable = availableBooks > 0;
@@ -96,20 +95,6 @@ const CivilibBookCard = ({ book, client, clientPublic, libraryAddress, useMonoch
 
     fetchBookAvailability();
   }, [clientPublic, book.id, effectiveLibraryAddress, refreshTrigger]);
-
-  useEffect(() => {
-    supabase
-      .from('hypercert_claims')
-      .select('borrow_count')
-      .eq('book_id', book.id)
-      .eq('library_address', effectiveLibraryAddress.toLowerCase())
-      .order('borrow_count', { ascending: false })
-      .limit(1)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data?.borrow_count) setBorrowCount(data.borrow_count);
-      });
-  }, [book.id, effectiveLibraryAddress]);
 
   return (
     <li className="w-full h-full">

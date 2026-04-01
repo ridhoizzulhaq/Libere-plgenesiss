@@ -118,7 +118,7 @@ export function useHypercerts() {
   }) => {
     try {
       // Cari existing claim di Supabase
-      const { data: claims, error: claimsError } = await supabase
+      const { data: claims } = await supabase
         .from('hypercert_claims')
         .select('activity_uri, activity_cid, borrow_count')
         .eq('book_id', params.bookId)
