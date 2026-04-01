@@ -118,6 +118,15 @@ Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16,
 - **Live:** https://libere-plgenesiss.vercel.app
 - **Repository:** https://github.com/ridhoizzulhaq/Libere-plgenesiss
 
+ ---
+
+## Achievements & Traction
+
+![Traction Overview](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad24ffa090f13fcbee492092e00.png?raw=true)
+
+![Awards & Partnerships](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad5860d5090daa355a445ab1a44.png?raw=true)
+
+
 ---
 
 ## License
