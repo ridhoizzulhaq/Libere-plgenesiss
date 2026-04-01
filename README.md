@@ -58,4 +58,69 @@ Every ownership right, royalty rule, and lending term is encoded directly into a
 
 ## Architecture
 
+Author / Publisher
+|
+| mint (ERC-1155 + ERC-2981)
+v
+Smart Contract
+|
+|---> Reader (buy / own / resell)
+|         |
+|         └---> instant royalty to author
+|
+|---> Library (deploy own contract / lend / donate)
+|         |
+|         └---> Hypercert minted on donation
+|
+v
+NFT Book Asset
+(on-chain ownership + authorship + royalty rules)
 
+
+
+---
+
+## Hypercerts Integration
+
+One of the persistent problems in charitable giving and corporate social responsibility is the inability to verify whether a contribution actually reached its intended destination. Libere integrates Hypercerts as the backbone of its impact infrastructure, turning every book donation into a verifiable, on-chain record of measurable good.
+
+### Impact Recording
+
+- A Hypercert is minted for every donation, recording the donor's identity, titles donated, receiving institution, and transaction timestamp
+- Not a receipt — a permanent, verifiable claim of contribution that anyone can inspect without relying on a third party
+- Enables donors and corporate CSR programs to prove exactly what they gave, to whom, and when
+
+**Example:** [View Impact log on Hyperscan](https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.claim.activity&rkey=3midgww7gys25)
+
+### Impact Measurement
+
+- Every borrowing event is recorded on-chain, referencing the original impact claim
+- Donors and corporate sponsors can see not just that their contribution arrived, but that it is actively being read
+- For libraries reporting to government funders, or corporations substantiating ESG claims, this transforms anecdotal generosity into structured, auditable evidence
+
+**Example:** [View Measurement log on Hyperscan](https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.context.measurement&rkey=3mifjx3uawk25)
+
+---
+
+## Changelog (Hackathon Period)
+
+Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
+
+- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation
+- **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles
+- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections
+- **Donation flow** — reader-to-library donation triggers automatic royalty payment and Hypercert minting in a single transaction
+
+---
+
+## Demo
+
+- **Video:** https://www.youtube.com/watch?v=z-oY35RoUOE
+- **Live:** https://libere-plgenesiss.vercel.app
+- **Repository:** https://github.com/ridhoizzulhaq/Libere-plgenesiss
+
+---
+
+## License
+
+MIT
