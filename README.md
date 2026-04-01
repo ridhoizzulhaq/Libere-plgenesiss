@@ -18,6 +18,8 @@
 | **Build Path** | Existing Code |
 | **Tracks** | Infrastructure & Digital Rights, Crypto |
 | **Sponsor Bounty** | Hypercerts (Funding the Commons) |
+| **Hackathon Repo** | [ridhoizzulhaq/Libere-plgenesiss](https://github.com/ridhoizzulhaq/Libere-plgenesiss) — isolated fork with all hackathon-specific changes |
+| **Main Repo** | [Libere-digital/libere](https://github.com/Libere-digital/libere) — ongoing production codebase |
 
 ---
 
@@ -99,7 +101,8 @@ Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16,
 
 - **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
 - **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles, surfacing verifiable usage data per donation
-- **Donation flow** — reader-to-library donation triggers Hypercert minting in a single transaction
+- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections independently of any platform
+- **Donation flow** — reader-to-library donation triggers automatic royalty payment to author and Hypercert minting in a single transaction
 
 ---
 
