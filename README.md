@@ -1,69 +1,126 @@
-# React + TypeScript + Vite
+# Libere
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> An NFT-powered digital book ecosystem that ensures every writer gets fair royalties, every reader truly owns their book, and every library expands access sustainably.
 
-Currently, two official plugins are available:
+[![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://www.youtube.com/watch?v=z-oY35RoUOE)
+[![GitHub](https://img.shields.io/badge/Repo-GitHub-black)](https://github.com/ridhoizzulhaq/Libere-plgenesiss)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Hackathon Submission
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| | |
+|---|---|
+| **Event** | PL Genesis: Frontiers of Collaboration |
+| **Build Path** | Existing Code |
+| **Tracks** | Infrastructure & Digital Rights, Crypto |
+| **Sponsor Bounty** | Hypercerts (Funding the Commons) |
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## The Problem
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The digital book industry is built on hidden inequalities that have compounded quietly for years.
+
+- Distribution platforms take 30 to 70 percent of every transaction
+- Authors wait up to 90 days to receive royalties
+- Readers who pay full price can lose access overnight if a platform shuts down
+- Amazon, Apple, and Google collectively control over 90 percent of the ebook retail market
+
+Libraries face the same imbalance from a different angle.
+
+- Publishers charge institutions three to five times the consumer price for a single ebook license
+- Licenses expire after just 26 loans, forcing libraries to repurchase the same title repeatedly
+- Controlled Digital Lending (CDL), the most serious attempt at a fix, was struck down by a federal court in 2023 after major publishers sued the Internet Archive
+- CDL failed because it digitized physical books without the copyright holder's permission, directly competing with the existing ebook licensing market
+- The ruling left libraries more dependent on publisher-controlled licensing than ever
+
+---
+
+## The Solution
+
+Libere exists precisely where CDL failed. Every book that enters the Libere ecosystem is published directly by the author or publisher themselves, meaning the copyright holder is the party actively minting the NFT and setting the terms of distribution from the outset. No unauthorized format conversion, no unilateral reproduction, no legal ambiguity.
+
+Every ownership right, royalty rule, and lending term is encoded directly into a smart contract at the moment a book is published — transparent, automatic, and permanent by design.
+
+---
+
+## How Libere Works
+
+- Each book is minted as an NFT using **ERC-1155** and **ERC-2981** standards, representing verifiable ownership, authorship, and royalty rules
+- When a reader buys or donates a book, the smart contract triggers instant royalty payment to the author and publisher, with no intermediaries and no hidden fees
+- Library institutions can deploy their own smart contracts to access, lend, and showcase their owned digital collections transparently and sustainably
+
+---
+
+## Architecture
+
+```
+Author / Publisher
+      |
+      | mint (ERC-1155 + ERC-2981)
+      v
+ Smart Contract
+      |
+      |---> Reader (buy / own / resell)
+      |         |
+      |         └---> instant royalty to author
+      |
+      |---> Library (deploy own contract / lend / donate)
+      |         |
+      |         └---> Hypercert minted on donation
+      |
+      v
+  NFT Book Asset
+  (on-chain ownership + authorship + royalty rules)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Hypercerts Integration
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+One of the persistent problems in charitable giving and corporate social responsibility is the inability to verify whether a contribution actually reached its intended destination. Libere integrates Hypercerts as the backbone of its impact infrastructure, turning every book donation into a verifiable, on-chain record of measurable good.
+
+### Impact Recording
+
+- A Hypercert is minted for every donation, recording the donor's identity, titles donated, receiving institution, and transaction timestamp
+- Not a receipt — a permanent, verifiable claim of contribution that anyone can inspect without relying on a third party
+- Enables donors and corporate CSR programs to prove exactly what they gave, to whom, and when
+
+**Example Impact log:**
+https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.claim.activity&rkey=3midgww7gys25
+
+### Impact Measurement
+
+- Every borrowing and reading event is recorded on-chain
+- Hypercerts surface how many times a donated book has been borrowed or read since entering a library's collection
+- Donors and corporate sponsors can see not just that their contribution arrived, but that it is actively being read
+- For libraries reporting to government funders, or corporations substantiating ESG claims, this transforms anecdotal generosity into structured, auditable evidence
+
+**Example Measurement log:**
+https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.context.measurement&rkey=3mifjx3uawk25
+
+---
+
+## Changelog (Hackathon Period)
+
+Features built and integrated during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
+
+- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
+- **Hypercerts Impact Measurement** — on-chain tracking of borrowing and reading events tied to donated titles, surfacing verifiable usage data per donation
+- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections independently of any platform
+- **Donation flow** — reader-to-library donation triggers automatic royalty payment to author and Hypercert minting in a single transaction
+
+---
+
+## Demo
+
+- **Video:** https://www.youtube.com/watch?v=z-oY35RoUOE
+- **Repository:** https://github.com/ridhoizzulhaq/Libere-plgenesiss
+
+---
+
+## License
+
+MIT
+
