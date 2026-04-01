@@ -2,7 +2,7 @@
   "client_id": "https://libere-plgenesiss.vercel.app/client-metadata.json",
   "client_name": "Libere",
   "client_uri": "https://libere-plgenesiss.vercel.app",
-  "redirect_uris": ["https://libere-plgenesiss.vercel.app/"],
+  "redirect_uris": ["https://libere-plgenesiss.vercel.app/oauth/callback"],
   "scope": "atproto transition:generic",
   "grant_types": ["authorization_code", "refresh_token"],
   "response_types": ["code"],

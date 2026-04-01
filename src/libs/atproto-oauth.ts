@@ -6,7 +6,7 @@ function getClientId(): string {
   if (isLocal) {
     return buildLoopbackClientId({
       hostname: '127.0.0.1',
-      pathname: '/',
+      pathname: '/oauth/callback',
       port,
     });
   }
