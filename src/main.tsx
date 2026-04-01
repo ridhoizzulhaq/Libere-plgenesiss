@@ -67,7 +67,11 @@ createRoot(document.getElementById("root")!).render(
           <SubdomainRouter>
             <Routes>
               {/* Public routes - accessible without login */}
-              <Route path="/" element={<Navigate to="/books" replace />} />
+              <Route path="/" element={
+                window.location.search.includes('code=')
+                  ? <OAuthCallbackScreen />
+                  : <Navigate to="/books" replace />
+              } />
               <Route path="/auth" element={<AuthScreen />} />
               <Route path="/oauth/callback" element={<OAuthCallbackScreen />} />
               <Route path="/books" element={<HomeScreen />} />
