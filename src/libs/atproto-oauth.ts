@@ -1,19 +1,16 @@
 import { BrowserOAuthClient, buildLoopbackClientId } from '@atproto/oauth-client-browser';
 
-const PROD_URL = import.meta.env.VITE_APP_URL as string | undefined;
-const IS_LOCAL = !PROD_URL;
-
 function getClientId(): string {
-  if (IS_LOCAL) {
-    // ATProto loopback: redirect_uri must be 127.0.0.1, not localhost
-    // So always pass hostname as '127.0.0.1'
+  const { hostname, port } = window.location;
+  const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+  if (isLocal) {
     return buildLoopbackClientId({
       hostname: '127.0.0.1',
       pathname: '/',
-      port: window.location.port,
+      port,
     });
   }
-  return `${PROD_URL}/client-metadata.json`;
+  return `${window.location.origin}/client-metadata.json`;
 }
 
 let _client: BrowserOAuthClient | null = null;
