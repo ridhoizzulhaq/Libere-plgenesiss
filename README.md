@@ -2,8 +2,50 @@
 
 > An NFT-powered digital book ecosystem that ensures every writer gets fair royalties, every reader truly owns their book, and every library expands access sustainably.
 
+![Libere Flow](https://i.ibb.co.com/67sYwZjh/19c605a1039beb5f4d50b444aaf92773.png)
+
 [![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://www.youtube.com/watch?v=z-oY35RoUOE)
 [![GitHub](https://img.shields.io/badge/Repo-GitHub-black)](https://github.com/ridhoizzulhaq/Libere-plgenesiss)
+[![LinkedIn](https://img.shields.io/badge/Builder-LinkedIn-blue)](https://www.linkedin.com/in/ridhoizzulhaq/)
+
+---
+
+## Hackathon Submission
+
+| | |
+|---|---|
+| **Event** | PL Genesis: Frontiers of Collaboration |
+| **Build Path** | Existing Code |
+| **Tracks** | Infrastructure & Digital Rights, Crypto |
+| **Sponsor Bounty** | Hypercerts (Funding the Commons) |
+
+---
+
+## The Problem
+
+The digital book industry is built on hidden inequalities that have compounded quietly for years.
+
+- Distribution platforms take 30 to 70 percent of every transaction
+- Authors wait up to 90 days to receive royalties
+- Readers who pay full price can lose access overnight if a platform shuts down
+- Amazon, Apple, and Google collectively control over 90 percent of the ebook retail market
+
+Libraries face the same imbalance from a different angle.
+https://i.ibb.co.com/67sYwZjh/19c605a1039beb5f4d50b444aaf92773.png ini valid
+Domain ibb.co.com tidak valid secara teknis — domain resmi ImgBB adalah i.ibb.co. Tapi kalau URL tersebut bisa dibuka di browser kamu, langsung saya pakai saja.
+
+Berikut README lengkapnya:
+
+
+# Libere
+
+> An NFT-powered digital book ecosystem that ensures every writer gets fair royalties, every reader truly owns their book, and every library expands access sustainably.
+
+![Libere Flow](https://i.ibb.co.com/67sYwZjh/19c605a1039beb5f4d50b444aaf92773.png)
+
+[![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://www.youtube.com/watch?v=z-oY35RoUOE)
+[![GitHub](https://img.shields.io/badge/Repo-GitHub-black)](https://github.com/ridhoizzulhaq/Libere-plgenesiss)
+[![LinkedIn](https://img.shields.io/badge/Builder-LinkedIn-blue)](https://www.linkedin.com/in/ridhoizzulhaq/)
 
 ---
 
@@ -39,7 +81,7 @@ Libraries face the same imbalance from a different angle.
 
 ## The Solution
 
-Libere exists precisely where CDL failed. Every book that enters the Libere ecosystem is published directly by the author or publisher themselves, meaning the copyright holder is the party actively minting the NFT and setting the terms of distribution from the outset. No unauthorized format conversion, no unilateral reproduction, no legal ambiguity.
+Libere exists precisely where CDL failed. Every book that enters the Libere ecosystem is published directly by the author or publisher themselves — meaning the copyright holder is the party actively minting the NFT and setting the terms of distribution from the outset. No unauthorized format conversion, no unilateral reproduction, no legal ambiguity.
 
 Every ownership right, royalty rule, and lending term is encoded directly into a smart contract at the moment a book is published — transparent, automatic, and permanent by design.
 
@@ -55,25 +97,25 @@ Every ownership right, royalty rule, and lending term is encoded directly into a
 
 ## Architecture
 
-```
 Author / Publisher
-      |
-      | mint (ERC-1155 + ERC-2981)
-      v
- Smart Contract
-      |
-      |---> Reader (buy / own / resell)
-      |         |
-      |         └---> instant royalty to author
-      |
-      |---> Library (deploy own contract / lend / donate)
-      |         |
-      |         └---> Hypercert minted on donation
-      |
-      v
-  NFT Book Asset
-  (on-chain ownership + authorship + royalty rules)
-```
+|
+| mint (ERC-1155 + ERC-2981)
+v
+Smart Contract
+|
+|---> Reader (buy / own / resell)
+|         |
+|         └---> instant royalty to author
+|
+|---> Library (deploy own contract / lend / donate)
+|         |
+|         └---> Hypercert minted on donation
+|
+v
+NFT Book Asset
+(on-chain ownership + authorship + royalty rules)
+
+
 
 ---
 
@@ -87,35 +129,33 @@ One of the persistent problems in charitable giving and corporate social respons
 - Not a receipt — a permanent, verifiable claim of contribution that anyone can inspect without relying on a third party
 - Enables donors and corporate CSR programs to prove exactly what they gave, to whom, and when
 
-**Example Impact log:**
-https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.claim.activity&rkey=3midgww7gys25
+**Example:** [View Impact log on Hyperscan](https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.claim.activity&rkey=3midgww7gys25)
 
 ### Impact Measurement
 
-- Every borrowing and reading event is recorded on-chain
-- Hypercerts surface how many times a donated book has been borrowed or read since entering a library's collection
+- Every borrowing event is recorded on-chain, referencing the original impact claim
 - Donors and corporate sponsors can see not just that their contribution arrived, but that it is actively being read
 - For libraries reporting to government funders, or corporations substantiating ESG claims, this transforms anecdotal generosity into structured, auditable evidence
 
-**Example Measurement log:**
-https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.context.measurement&rkey=3mifjx3uawk25
+**Example:** [View Measurement log on Hyperscan](https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.context.measurement&rkey=3mifjx3uawk25)
 
 ---
 
 ## Changelog (Hackathon Period)
 
-Features built and integrated during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
+Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
 
-- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
-- **Hypercerts Impact Measurement** — on-chain tracking of borrowing and reading events tied to donated titles, surfacing verifiable usage data per donation
-- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections independently of any platform
-- **Donation flow** — reader-to-library donation triggers automatic royalty payment to author and Hypercert minting in a single transaction
+- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation
+- **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles
+- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections
+- **Donation flow** — reader-to-library donation triggers automatic royalty payment and Hypercert minting in a single transaction
 
 ---
 
 ## Demo
 
 - **Video:** https://www.youtube.com/watch?v=z-oY35RoUOE
+- **Live:** https://libere-plgenesiss.vercel.app
 - **Repository:** https://github.com/ridhoizzulhaq/Libere-plgenesiss
 
 ---
@@ -123,4 +163,3 @@ Features built and integrated during PL Genesis: Frontiers of Collaboration (Feb
 ## License
 
 MIT
-
