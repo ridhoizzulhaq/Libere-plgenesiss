@@ -2,7 +2,7 @@
 
 > An NFT-powered digital book ecosystem that ensures every writer gets fair royalties, every reader truly owns their book, and every library expands access sustainably.
 
-![Libere Flow](https://i.ibb.co.com/67sYwZjh/19c605a1039beb5f4d50b444aaf92773.png)
+![Libere Flow](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/flow.png?raw=true)
 
 [![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://www.youtube.com/watch?v=z-oY35RoUOE)
 [![GitHub](https://img.shields.io/badge/Repo-GitHub-black)](https://github.com/ridhoizzulhaq/Libere-plgenesiss)
@@ -48,6 +48,14 @@ Every ownership right, royalty rule, and lending term is encoded directly into a
 
 ---
 
+## Achievements & Traction
+
+![Traction Overview](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad24ffa090f13fcbee492092e00.png?raw=true)
+
+![Awards & Partnerships](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad5860d5090daa355a445ab1a44.png?raw=true)
+
+---
+
 ## How Libere Works
 
 - Each book is minted as an NFT using **ERC-1155** and **ERC-2981** standards, representing verifiable ownership, authorship, and royalty rules
@@ -58,25 +66,7 @@ Every ownership right, royalty rule, and lending term is encoded directly into a
 
 ## Architecture
 
-Author / Publisher
-|
-| mint (ERC-1155 + ERC-2981)
-v
-Smart Contract
-|
-|---> Reader (buy / own / resell)
-|         |
-|         └---> instant royalty to author
-|
-|---> Library (deploy own contract / lend / donate)
-|         |
-|         └---> Hypercert minted on donation
-|
-v
-NFT Book Asset
-(on-chain ownership + authorship + royalty rules)
-
-
+![Libere Architecture](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/diagram.png?raw=true)
 
 ---
 
@@ -94,9 +84,10 @@ One of the persistent problems in charitable giving and corporate social respons
 
 ### Impact Measurement
 
-- Every borrowing event is recorded on-chain, referencing the original impact claim
+- Each time a donated book is borrowed from the library, a new measurement record is created referencing the original impact claim
 - Donors and corporate sponsors can see not just that their contribution arrived, but that it is actively being read
 - For libraries reporting to government funders, or corporations substantiating ESG claims, this transforms anecdotal generosity into structured, auditable evidence
+- Impact is not declared once and forgotten; it compounds with every borrow
 
 **Example:** [View Measurement log on Hyperscan](https://www.hyperscan.dev/data?did=did%3Aplc%3A3ccjzfaw7mltkor5gdpdekyj&collection=org.hypercerts.context.measurement&rkey=3mifjx3uawk25)
 
@@ -106,9 +97,10 @@ One of the persistent problems in charitable giving and corporate social respons
 
 Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16, 2026):
 
-- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation
-- **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles
-
+- **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
+- **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles, surfacing verifiable usage data per donation
+- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections independently of any platform
+- **Donation flow** — reader-to-library donation triggers automatic royalty payment to author and Hypercert minting in a single transaction
 
 ---
 
@@ -117,15 +109,6 @@ Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16,
 - **Video:** https://www.youtube.com/watch?v=z-oY35RoUOE
 - **Live:** https://libere-plgenesiss.vercel.app
 - **Repository:** https://github.com/ridhoizzulhaq/Libere-plgenesiss
-
- ---
-
-## Achievements & Traction
-
-![Traction Overview](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad24ffa090f13fcbee492092e00.png?raw=true)
-
-![Awards & Partnerships](https://github.com/ridhoizzulhaq/Libere-plgenesiss/blob/main/public/19c60ad5860d5090daa355a445ab1a44.png?raw=true)
-
 
 ---
 
