@@ -1,0 +1,553 @@
+/**
+ * Supabase Storage Utilities
+ *
+ * Helper functions for managing EPUB files in Supabase Storage.
+ * EPUBs are stored in private bucket 'libere-books' with authenticated access only.
+ */
+
+import { supabase } from '../libs/supabase';
+import { detectDocumentType, type DocumentType } from './documentType';
+
+const BOOK_BUCKET = 'libere-books';
+const SIGNED_URL_EXPIRY = 300; // 5 minutes in seconds (reduced from 1 hour for security)
+
+/**
+ * Generate a signed URL for accessing an EPUB file
+ * Signed URLs are temporary (5 minutes) for security
+ * URLs are automatically refreshed in reader for continued access
+ *
+ * @param bookId - The book ID
+ * @returns Signed URL or null if error
+ */
+export async function getSignedEpubUrl(bookId: number): Promise<string | null> {
+  try {
+    const filePath = `${bookId}/book.epub`;
+
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .createSignedUrl(filePath, SIGNED_URL_EXPIRY);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to create signed URL for book ${bookId}:`, error);
+      return null;
+    }
+
+    if (!data?.signedUrl) {
+      console.error(`[SupabaseStorage] No signed URL returned for book ${bookId}`);
+      return null;
+    }
+
+    console.log(`[SupabaseStorage] Generated signed URL for book ${bookId} (expires in ${SIGNED_URL_EXPIRY}s)`);
+    return data.signedUrl;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error generating signed URL:`, error);
+    return null;
+  }
+}
+
+/**
+ * Upload an EPUB file to Supabase Storage
+ * Used by admin-publish tool
+ *
+ * @param bookId - The book ID
+ * @param epubFile - The EPUB file (File or Blob)
+ * @returns Public URL (not signed) or null if error
+ */
+export async function uploadEpub(bookId: number, epubFile: File | Blob): Promise<string | null> {
+  try {
+    const filePath = `${bookId}/book.epub`;
+
+    // Check if file already exists
+    const { data: existingFiles } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .list(bookId.toString());
+
+    const fileExists = existingFiles?.some(file => file.name === 'book.epub');
+
+    if (fileExists) {
+      console.warn(`[SupabaseStorage] EPUB already exists for book ${bookId}, will overwrite`);
+
+      // Delete existing file
+      await supabase.storage
+        .from(BOOK_BUCKET)
+        .remove([filePath]);
+    }
+
+    // Upload new file
+    const { error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .upload(filePath, epubFile, {
+        contentType: 'application/epub+zip',
+        cacheControl: '3600', // Cache for 1 hour
+        upsert: false,
+      });
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to upload EPUB for book ${bookId}:`, error);
+      return null;
+    }
+
+    // Get public URL (note: will not work for private bucket, but stored in database)
+    const { data: urlData } = supabase.storage
+      .from(BOOK_BUCKET)
+      .getPublicUrl(filePath);
+
+    console.log(`[SupabaseStorage] Successfully uploaded EPUB for book ${bookId}`);
+    return urlData.publicUrl; // This is the storage path, not an accessible URL
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error uploading EPUB:`, error);
+    return null;
+  }
+}
+
+/**
+ * Download an EPUB file as a Blob
+ * Used for caching EPUBs offline
+ *
+ * @param bookId - The book ID
+ * @returns EPUB file as Blob or null if error
+ */
+export async function downloadEpubBlob(bookId: number): Promise<Blob | null> {
+  try {
+    const filePath = `${bookId}/book.epub`;
+
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .download(filePath);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to download EPUB for book ${bookId}:`, error);
+      return null;
+    }
+
+    if (!data) {
+      console.error(`[SupabaseStorage] No data returned for book ${bookId}`);
+      return null;
+    }
+
+    console.log(`[SupabaseStorage] Downloaded EPUB for book ${bookId} (${data.size} bytes)`);
+    return data;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error downloading EPUB:`, error);
+    return null;
+  }
+}
+
+/**
+ * Check if an EPUB file exists in storage
+ *
+ * @param bookId - The book ID
+ * @returns true if exists, false otherwise
+ */
+export async function epubExists(bookId: number): Promise<boolean> {
+  try {
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .list(bookId.toString());
+
+    if (error) {
+      console.error(`[SupabaseStorage] Error checking EPUB existence:`, error);
+      return false;
+    }
+
+    const exists = data?.some(file => file.name === 'book.epub') || false;
+    console.log(`[SupabaseStorage] Book ${bookId} EPUB exists: ${exists}`);
+    return exists;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error checking EPUB existence:`, error);
+    return false;
+  }
+}
+
+/**
+ * Delete an EPUB file from storage
+ * Used for admin cleanup
+ *
+ * @param bookId - The book ID
+ * @returns true if successful, false otherwise
+ */
+export async function deleteEpub(bookId: number): Promise<boolean> {
+  try {
+    const filePath = `${bookId}/book.epub`;
+
+    const { error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .remove([filePath]);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to delete EPUB for book ${bookId}:`, error);
+      return false;
+    }
+
+    console.log(`[SupabaseStorage] Successfully deleted EPUB for book ${bookId}`);
+    return true;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error deleting EPUB:`, error);
+    return false;
+  }
+}
+
+/**
+ * Get storage URL for an EPUB (not accessible without signed URL)
+ * This is the URL format stored in database 'epub' column
+ *
+ * @param bookId - The book ID
+ * @returns Storage URL
+ */
+export function getEpubStorageUrl(bookId: number): string {
+  const filePath = `${bookId}/book.epub`;
+  const { data } = supabase.storage
+    .from(BOOK_BUCKET)
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
+
+/**
+ * Extract book ID from Supabase storage URL
+ *
+ * @param url - Supabase storage URL
+ * @returns Book ID or null if invalid URL
+ */
+export function extractBookIdFromUrl(url: string): number | null {
+  try {
+    // URL format: https://[project].supabase.co/storage/v1/object/[type]/libere-books/123/book.epub
+    const match = url.match(/libere-books\/(\d+)\/book\.epub/);
+    if (match && match[1]) {
+      return parseInt(match[1], 10);
+    }
+    return null;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error extracting book ID from URL:`, error);
+    return null;
+  }
+}
+
+/**
+ * Check if a URL is a Supabase storage URL or path
+ *
+ * @param url - URL or storage path to check
+ * @returns true if Supabase storage URL/path, false otherwise
+ */
+export function isSupabaseStorageUrl(url: string): boolean {
+  console.log('🔍 [isSupabaseStorageUrl] Checking:', url);
+
+  // Check for full Supabase Storage URL
+  if (url.includes('.supabase.co/storage/') && url.includes('libere-books')) {
+    console.log('✅ [isSupabaseStorageUrl] Detected as full Supabase URL');
+    return true;
+  }
+
+  // Check for storage path format: libere-books/{bookId}/book.{extension}
+  if (url.startsWith('libere-books/') && (url.endsWith('/book.epub') || url.endsWith('/book.pdf'))) {
+    console.log('✅ [isSupabaseStorageUrl] Detected as storage path');
+    return true;
+  }
+
+  console.log('❌ [isSupabaseStorageUrl] Not recognized');
+  return false;
+}
+
+/**
+ * Check if a URL is an IPFS/Pinata URL
+ *
+ * @param url - URL to check
+ * @returns true if IPFS URL, false otherwise
+ */
+export function isIpfsUrl(url: string): boolean {
+  return url.includes('ipfs') || url.includes('pinata.cloud');
+}
+
+/**
+ * Auto-refresh signed URL before expiry
+ * Call this function to start background refresh (every 4 minutes for 5-minute URLs)
+ *
+ * @param bookId - The book ID
+ * @param onRefresh - Callback when new URL is ready
+ * @returns Cleanup function to stop auto-refresh
+ */
+export function setupSignedUrlAutoRefresh(
+  bookId: number,
+  onRefresh: (newUrl: string) => void
+): () => void {
+  console.log('🔄 [AutoRefresh] Setting up auto-refresh for book', bookId);
+
+  // Refresh every 4 minutes (240 seconds) to stay ahead of 5-minute expiry
+  const REFRESH_INTERVAL = 240000; // 4 minutes in milliseconds
+
+  const intervalId = setInterval(async () => {
+    console.log('🔄 [AutoRefresh] Refreshing signed URL...');
+
+    try {
+      const newSignedUrl = await getSignedEpubUrl(bookId);
+
+      if (newSignedUrl) {
+        console.log('✅ [AutoRefresh] New signed URL generated');
+        onRefresh(newSignedUrl);
+      } else {
+        console.error('❌ [AutoRefresh] Failed to refresh signed URL');
+      }
+    } catch (error) {
+      console.error('❌ [AutoRefresh] Error refreshing URL:', error);
+    }
+  }, REFRESH_INTERVAL);
+
+  console.log('✅ [AutoRefresh] Auto-refresh started (every 4 minutes)');
+
+  // Return cleanup function
+  return () => {
+    console.log('🧹 [AutoRefresh] Stopping auto-refresh');
+    clearInterval(intervalId);
+  };
+}
+
+// =============================================================
+// 📄 PDF-SPECIFIC FUNCTIONS
+// =============================================================
+
+/**
+ * Generate a signed URL for accessing a PDF file
+ * Signed URLs are temporary (5 minutes) for security
+ *
+ * @param bookId - The book ID
+ * @returns Signed URL or null if error
+ */
+export async function getSignedPdfUrl(bookId: number): Promise<string | null> {
+  try {
+    const filePath = `${bookId}/book.pdf`;
+
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .createSignedUrl(filePath, SIGNED_URL_EXPIRY);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to create signed PDF URL for book ${bookId}:`, error);
+      return null;
+    }
+
+    if (!data?.signedUrl) {
+      console.error(`[SupabaseStorage] No signed PDF URL returned for book ${bookId}`);
+      return null;
+    }
+
+    console.log(`[SupabaseStorage] Generated signed PDF URL for book ${bookId} (expires in ${SIGNED_URL_EXPIRY}s)`);
+    return data.signedUrl;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error generating signed PDF URL:`, error);
+    return null;
+  }
+}
+
+/**
+ * Upload a PDF file to Supabase Storage
+ * Used by admin-publish tool and CreateBookV2Screen
+ *
+ * @param bookId - The book ID
+ * @param pdfFile - The PDF file (File or Blob)
+ * @returns Public URL (not signed) or null if error
+ */
+export async function uploadPdf(bookId: number, pdfFile: File | Blob): Promise<string | null> {
+  try {
+    const filePath = `${bookId}/book.pdf`;
+
+    // Check if file already exists
+    const { data: existingFiles } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .list(bookId.toString());
+
+    const fileExists = existingFiles?.some(file => file.name === 'book.pdf');
+
+    if (fileExists) {
+      console.warn(`[SupabaseStorage] PDF already exists for book ${bookId}, will overwrite`);
+
+      // Delete existing file
+      await supabase.storage
+        .from(BOOK_BUCKET)
+        .remove([filePath]);
+    }
+
+    // Upload new file
+    const { error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .upload(filePath, pdfFile, {
+        contentType: 'application/octet-stream', // Generic binary type for compatibility with Supabase
+        cacheControl: '3600', // Cache for 1 hour
+        upsert: false,
+      });
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to upload PDF for book ${bookId}:`, error);
+      return null;
+    }
+
+    // Get public URL (note: will not work for private bucket, but stored in database)
+    const { data: urlData } = supabase.storage
+      .from(BOOK_BUCKET)
+      .getPublicUrl(filePath);
+
+    console.log(`[SupabaseStorage] Successfully uploaded PDF for book ${bookId}`);
+    return urlData.publicUrl; // This is the storage path, not an accessible URL
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error uploading PDF:`, error);
+    return null;
+  }
+}
+
+/**
+ * Download a PDF file as a Blob
+ * Used for caching PDFs offline
+ *
+ * @param bookId - The book ID
+ * @returns PDF file as Blob or null if error
+ */
+export async function downloadPdfBlob(bookId: number): Promise<Blob | null> {
+  try {
+    const filePath = `${bookId}/book.pdf`;
+
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .download(filePath);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to download PDF for book ${bookId}:`, error);
+      return null;
+    }
+
+    if (!data) {
+      console.error(`[SupabaseStorage] No data returned for book ${bookId}`);
+      return null;
+    }
+
+    console.log(`[SupabaseStorage] Downloaded PDF for book ${bookId} (${data.size} bytes)`);
+    return data;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error downloading PDF:`, error);
+    return null;
+  }
+}
+
+/**
+ * Check if a PDF file exists in storage
+ *
+ * @param bookId - The book ID
+ * @returns true if exists, false otherwise
+ */
+export async function pdfExists(bookId: number): Promise<boolean> {
+  try {
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .list(bookId.toString());
+
+    if (error) {
+      console.error(`[SupabaseStorage] Error checking PDF existence:`, error);
+      return false;
+    }
+
+    const exists = data?.some(file => file.name === 'book.pdf') || false;
+    console.log(`[SupabaseStorage] Book ${bookId} PDF exists: ${exists}`);
+    return exists;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error checking PDF existence:`, error);
+    return false;
+  }
+}
+
+/**
+ * Delete a PDF file from storage
+ * Used for admin cleanup
+ *
+ * @param bookId - The book ID
+ * @returns true if successful, false otherwise
+ */
+export async function deletePdf(bookId: number): Promise<boolean> {
+  try {
+    const filePath = `${bookId}/book.pdf`;
+
+    const { error } = await supabase.storage
+      .from(BOOK_BUCKET)
+      .remove([filePath]);
+
+    if (error) {
+      console.error(`[SupabaseStorage] Failed to delete PDF for book ${bookId}:`, error);
+      return false;
+    }
+
+    console.log(`[SupabaseStorage] Successfully deleted PDF for book ${bookId}`);
+    return true;
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error deleting PDF:`, error);
+    return false;
+  }
+}
+
+/**
+ * Get storage URL for a PDF (not accessible without signed URL)
+ * This is the URL format stored in database 'epub' column
+ *
+ * @param bookId - The book ID
+ * @returns Storage URL
+ */
+export function getPdfStorageUrl(bookId: number): string {
+  const filePath = `${bookId}/book.pdf`;
+  const { data } = supabase.storage
+    .from(BOOK_BUCKET)
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
+
+// =============================================================
+// 📚 UNIFIED DOCUMENT FUNCTIONS (EPUB + PDF)
+// =============================================================
+
+/**
+ * Download document (EPUB or PDF) as a Blob with auto-detection
+ * Used by DocumentReaderScreen for unified document loading
+ *
+ * @param bookId - The book ID
+ * @param documentPath - Optional document path for type detection
+ * @returns Object with blob and detected type, or null if error
+ */
+export async function downloadDocumentBlob(
+  bookId: number,
+  documentPath?: string
+): Promise<{ blob: Blob; type: DocumentType } | null> {
+  try {
+    // Detect document type from path
+    const docInfo = documentPath
+      ? detectDocumentType(documentPath)
+      : { type: 'epub' as DocumentType, extension: '.epub' }; // default to EPUB
+
+    const fileName = `book${docInfo.extension}`;
+    const filePath = `${bookId}/${fileName}`;
+
+    console.log(`[SupabaseStorage] Downloading ${docInfo.type.toUpperCase()} for book ${bookId}`);
+    console.log('   File path:', filePath);
+    console.log('   Starting download from Supabase Storage...');
+
+    const downloadStart = performance.now();
+    const { data, error } = await supabase.storage
+      .from(BOOK_BUCKET) // Same bucket for all documents
+      .download(filePath);
+    const downloadEnd = performance.now();
+
+    if (error || !data) {
+      console.error(`[SupabaseStorage] Failed to download ${docInfo.type}:`, error);
+      return null;
+    }
+
+    const downloadTime = (downloadEnd - downloadStart) / 1000;
+    const fileSizeMB = data.size / 1024 / 1024;
+    const speedMBps = fileSizeMB / downloadTime;
+
+    console.log(`✅ [SupabaseStorage] Downloaded ${docInfo.type}`);
+    console.log(`   File size: ${fileSizeMB.toFixed(2)} MB`);
+    console.log(`   ⏱️ Download time: ${downloadTime.toFixed(2)} seconds`);
+    console.log(`   📊 Download speed: ${speedMBps.toFixed(2)} MB/s`);
+
+    return { blob: data, type: docInfo.type };
+  } catch (error) {
+    console.error(`[SupabaseStorage] Error downloading document:`, error);
+    return null;
+  }
+}
