@@ -99,8 +99,7 @@ Features built during PL Genesis: Frontiers of Collaboration (Feb 10 – Mar 16,
 
 - **Hypercerts Impact Recording** — on-chain attribution minting for every book donation, capturing donor identity, titles, receiving institution, and timestamp
 - **Hypercerts Impact Measurement** — on-chain tracking of borrowing events tied to donated titles, surfacing verifiable usage data per donation
-- **Library Smart Contract** — institutions can deploy their own contracts to own, lend, and showcase digital collections independently of any platform
-- **Donation flow** — reader-to-library donation triggers automatic royalty payment to author and Hypercert minting in a single transaction
+- **Donation flow** — reader-to-library donation triggers Hypercert minting in a single transaction
 
 ---
 
