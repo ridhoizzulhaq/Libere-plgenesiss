@@ -245,7 +245,10 @@ VITE_BASE_SEPOLIA_LIBRARY_BASE_URL=https://base-sepolia.blockscout.com/api/v2/ad
 
 ## License
 
-  
-
 MIT
+---
+## Acknowledgements
+
+All books available in the live demo are either sourced from the public domain or published with explicit permission from the respective authors. Public domain titles have been reformatted and presented in the Libere style for demonstration purposes. No copyrighted material is reproduced without authorization. This demo is intended solely to showcase the platform's publishing, lending, and impact tracking infrastructure.    
+
 
