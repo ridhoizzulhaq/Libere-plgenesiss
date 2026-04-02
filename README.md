@@ -24,28 +24,15 @@
 
 ## Hackathon Submission
 
- 
 | | |
-
 |---|---|
-
 | **Event** | PL Genesis: Frontiers of Collaboration |
-
 | **Build Path** | Existing Code |
-
 | **Tracks** | Infrastructure & Digital Rights, Crypto |
-
 | **Sponsor Bounty** | Hypercerts (Funding the Commons) |
-
 | **Hackathon Repo** | [ridhoizzulhaq/Libere-plgenesiss](https://github.com/ridhoizzulhaq/Libere-plgenesiss) — isolated fork with all hackathon-specific changes |
-
 | **Main Repo** | [Libere-digital/libere](https://github.com/Libere-digital/libere) — ongoing production codebase |
-
 | **X / Twitter** | [@ridhoizzulhaq_](https://x.com/ridhoizzulhaq_) |
-
-  
-
----
 
   
 
